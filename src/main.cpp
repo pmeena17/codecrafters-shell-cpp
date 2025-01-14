@@ -24,14 +24,12 @@ int main()
         {
             bExit = true;
             bIsInputValid = true;
-            continue;
         }
 
         if (input.find("echo") == 0) // echo command
         {
             std::cout << input.substr(nEchoLength) << '\n'; // print everything after "echo "
             bIsInputValid = true;
-            continue;
         }
 
         if (input.find("type") == 0) // type command
@@ -42,7 +40,6 @@ int main()
             else
                 std::cout << sSub << ": not found\n";
             bIsInputValid = true;
-            continue;
         }
 
         if (!bIsInputValid)
