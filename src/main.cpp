@@ -1,12 +1,14 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <cstdlib>
 
 int main()
 {
     const int nEchoLength = 5;
     const int nTypeLength = 5;
     static bool bExit = false;
+    std::string sPath = std::getenv("PATH");
 
     while (!bExit)
     {
@@ -35,6 +37,20 @@ int main()
         if (input.find("type") == 0) // type command
         {
             std::string sSub = input.substr(nTypeLength); // get the command following "type"
+            
+            size_t pos = 0;
+            std::string sTemp;
+            while ((pos = sPath.find(':')) != std::string::npos) // break PATH into smaller strings at the delimiter " : "
+            {
+                sTemp = sPath.substr(0, pos);
+                if (sTemp.find(sSub))                                  // check if type command exists in PATH substrings
+                {
+                    std::cout << sSub << " is " << sTemp << '\n';      // print the first result if found
+                    break;
+                }
+                sPath.erase(0, pos + 1); // 1 because lenght of " : " is 1
+            }
+
             if (sSub.substr(0, 4) == "exit" || sSub.substr(0, 4) == "echo" || sSub.substr(0, 4) == "type") // check if the command matches any built-in commands. TODO: use sBuiltIn for look-up?
                 std::cout << sSub << " is a shell builtin\n";
             else
