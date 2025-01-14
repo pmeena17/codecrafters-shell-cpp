@@ -1,69 +1,91 @@
 #include <iostream>
 #include <string>
-#include <vector>
 #include <cstdlib>
+#include <sstream>
+#include <filesystem>
+
+static const std::string scEmptyString = "";
+enum class ValidCommands
+{
+    invalid, exit, echo, type
+};
+
+const ValidCommands IsValidCommand(std::string sCommand)
+{
+    sCommand = sCommand.substr(0, sCommand.find(" "));
+    if (sCommand == "exit") return ValidCommands::exit;
+    if (sCommand == "echo") return ValidCommands::echo;
+    if (sCommand == "type") return ValidCommands::type;
+    
+    return ValidCommands::invalid;
+}
+
+std::string GetValidPath(std::string sCommand)
+{
+    std::string sPathEnv = std::getenv("PATH");
+
+    size_t pos = 0;
+    std::string sTemp;
+    while ((pos = sPathEnv.find(':')) != std::string::npos) // break PATH into smaller strings at the delimiter " : "
+    {
+        sTemp = sPathEnv.substr(0, pos);
+        if (sTemp.find(sCommand) != std::string::npos)      // check if type command exists in PATH substrings
+            return sTemp;
+        sPathEnv.erase(0, pos + 1); // 1 because lenght of " : " is 1
+    }
+
+    return scEmptyString;
+}
 
 int main()
 {
-    const int nEchoLength = 5;
-    const int nTypeLength = 5;
     static bool bExit = false;
-    std::string sPath = std::getenv("PATH");
-
     while (!bExit)
     {
         // Flush after every std::cout / std:cerr
         std::cout << std::unitbuf;
         std::cerr << std::unitbuf;
-
         std::cout << "$ "; // prompt
 
         std::string input;
         std::getline(std::cin, input);
-        bool bIsInputValid = false;
 
-        if (input.find("exit") == 0) // exit command
+        switch (IsValidCommand(input))
         {
-            bExit = true;
-            bIsInputValid = true;
-        }
-
-        if (input.find("echo") == 0) // echo command
-        {
-            std::cout << input.substr(nEchoLength) << '\n'; // print everything after "echo "
-            bIsInputValid = true;
-        }
-
-        if (input.find("type") == 0) // type command
-        {
-            std::string sSub = "";
-            if (input.length() >= nTypeLength)
-                sSub = input.substr(nTypeLength); // get the command following "type"
-            else
-                continue;
-            
-            size_t pos = 0;
-            std::string sTemp;
-            while ((pos = sPath.find(':')) != std::string::npos) // break PATH into smaller strings at the delimiter " : "
+            case ValidCommands::exit:
             {
-                sTemp = sPath.substr(0, pos);
-                if (sTemp.find(sSub) != std::string::npos)             // check if type command exists in PATH substrings
-                {
-                    std::cout << sSub << " is " << sTemp << '\n';      // print the first result if found
-                    break;
-                }
-                sPath.erase(0, pos + 1); // 1 because lenght of " : " is 1
+                bExit = true;
+                break;
             }
+            case ValidCommands::echo:
+            {
+                input.erase(0, input.find(" ") + 1); // remove "echo ", then print the command
+                std::cout << input << '\n';
+                break;
+            }
+            case ValidCommands::type:
+            {
+                input.erase(0, input.find(" ") + 1); // remove "type "
 
-            if (sSub.substr(0, 4) == "exit" || sSub.substr(0, 4) == "echo" || sSub.substr(0, 4) == "type") // check if the command matches any built-in commands. TODO: use sBuiltIn for look-up?
-                std::cout << sSub << " is a shell builtin\n";
-            else
-                std::cout << sSub << ": not found\n";
-            bIsInputValid = true;
+                if (IsValidCommand(input) != ValidCommands::invalid)
+                    std::cout << input << " is a shell builtin\n";
+                else
+                {
+                    std::string sPath = GetValidPath(input);
+                    if (sPath != scEmptyString)
+                        std::cout << sPath << " is " << input << '\n';
+                    else
+                        std::cout << input << " not found\n";
+                }
+                break;
+            }
+            case ValidCommands::invalid: // fall-through
+            default:
+            {
+                std::cout << input << ": command not found\n";	// invalid command
+                break;
+            }
         }
-
-        if (!bIsInputValid)
-            std::cout << input << ": command not found\n";	// invalid command
     }
     return 0;
 }
