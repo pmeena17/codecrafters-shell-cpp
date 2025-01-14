@@ -36,13 +36,18 @@ int main()
 
         if (input.find("type") == 0) // type command
         {
-            std::string sSub = input.substr(nTypeLength); // get the command following "type"
+            std::string sSub = "";
+            if (input.length() >= nTypeLength)
+                sSub = input.substr(nTypeLength); // get the command following "type"
+            else
+                continue;
             
             size_t pos = 0;
             std::string sTemp;
             while ((pos = sPath.find(':')) != std::string::npos) // break PATH into smaller strings at the delimiter " : "
             {
                 sTemp = sPath.substr(0, pos);
+                std::cout << sTemp << '\n';
                 if (sTemp.find(sSub) != std::string::npos)             // check if type command exists in PATH substrings
                 {
                     std::cout << sSub << " is " << sTemp << '\n';      // print the first result if found
