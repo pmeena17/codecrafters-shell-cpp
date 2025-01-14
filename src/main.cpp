@@ -47,7 +47,6 @@ int main()
             while ((pos = sPath.find(':')) != std::string::npos) // break PATH into smaller strings at the delimiter " : "
             {
                 sTemp = sPath.substr(0, pos);
-                std::cout << sTemp << '\n';
                 if (sTemp.find(sSub) != std::string::npos)             // check if type command exists in PATH substrings
                 {
                     std::cout << sSub << " is " << sTemp << '\n';      // print the first result if found
