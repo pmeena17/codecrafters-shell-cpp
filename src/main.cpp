@@ -5,11 +5,10 @@ int main() {
   std::cout << std::unitbuf;
   std::cerr << std::unitbuf;
 
-  std::string input;
-
-  while (std::cin >> input)
+  while (std::cin)
   {
 	std::cout << "$ ";
+	std::string input;
 	std::getline(std::cin, input, '\n');
 	std::cerr << input << ": command not found\n";
   }
