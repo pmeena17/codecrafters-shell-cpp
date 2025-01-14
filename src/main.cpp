@@ -12,6 +12,8 @@ int main() {
 	std::getline(std::cin, input, '\n');
 	if (input == "exit 0")
 		return 0;
+	if (input.find("echo ") != string::npos) // if you find "echo " in the input stream
+		std::cout << input.substr(input.find("echo ")); // print everything after "echo "
 	std::cerr << input << ": command not found\n";
   }
 }
