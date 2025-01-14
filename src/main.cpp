@@ -30,7 +30,7 @@ int main()
         if (input.find("type") == 0) // type command
         {
             std::string sSub = input.substr(nTypeLength); // get the command following "type"
-            if (find(sBuiltIn.begin(), sBuiltIn.end(), sSub) != sBuiltIn.end()) // check if the command exists in built-in commands
+            if (sSub == "exit" || sSub == "echo" || sSub ==  "type") // check if the command matches any built-in commands. TODO: use sBuiltIn for look-up?
                 std::cout << sSub << " is a shell builtin\n";
             continue;
         }
