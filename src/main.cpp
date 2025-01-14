@@ -36,5 +36,6 @@ int main()
         }
 
         std::cout << input << ": command not found\n";	// invalid command
+        std::cout << "$ "; // prompt
     }
 }
