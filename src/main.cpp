@@ -14,11 +14,11 @@ int main()
         std::cout << std::unitbuf;
         std::cerr << std::unitbuf;
 
+        std::cout << "$ "; // prompt
 
         std::string input;
         std::getline(std::cin, input);
         bool bIsInputValid = false;
-        std::cout << "$ "; // prompt
 
         if (input.find("exit") == 0) // exit command
         {
