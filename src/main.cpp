@@ -13,7 +13,10 @@ int main() {
 	if (input == "exit 0")
 		return 0;
 	if (input.find("echo ") != std::string::npos) // if you find "echo " in the input stream
-		std::cout << input.substr(input.find("echo ")); // print everything after "echo "
+	{
+		std::cout << input.substr(input.find("echo ") + 5); // print everything after "echo "
+		continue;
+	}
 	std::cerr << input << ": command not found\n";
   }
 }
