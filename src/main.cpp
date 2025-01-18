@@ -3,11 +3,12 @@
 #include <cstdlib>
 #include <sstream>
 #include <filesystem>
+#include "header.h"
 
 static const std::string scEmptyString = "";
 enum class ValidCommands
 {
-    invalid, exit, echo, type
+    invalid, exit, echo, type, cmd
 };
 
 const ValidCommands IsValidCommand(std::string sCommand)
@@ -16,6 +17,7 @@ const ValidCommands IsValidCommand(std::string sCommand)
     if (sCommand == "exit") return ValidCommands::exit;
     if (sCommand == "echo") return ValidCommands::echo;
     if (sCommand == "type") return ValidCommands::type;
+    if (GetValidPath(sCommand) != scEmptyString) return ValidCommands::cmd;
     
     return ValidCommands::invalid;
 }
@@ -77,6 +79,12 @@ int main()
                     else
                         std::cout << input << " not found\n";
                 }
+                break;
+            }
+            case ValidCommands::cmd:
+            {
+                system(input.c_str());
+                // call to exec function with "input" as argument
                 break;
             }
             case ValidCommands::invalid: // fall-through
