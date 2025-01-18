@@ -68,8 +68,9 @@ int main()
             case ValidCommands::type:
             {
                 input.erase(0, input.find(" ") + 1); // remove "type "
-
-                if (IsValidCommand(input) != ValidCommands::invalid && IsValidCommand(input) != ValidCommands::cmd)
+                
+                ValidCommands nIsBuiltIn = IsValidCommand(input);
+                if (nIsBuiltIn != ValidCommands::invalid && nIsBuiltIn != ValidCommands::cmd)
                     std::cout << input << " is a shell builtin\n";
                 else
                 {
