@@ -12,7 +12,7 @@ enum class ValidCommands
 
 const ValidCommands IsValidCommand(std::string sCommand)
 {
-    sCommand = sCommand.substr(0, sCommand.find(" "));
+    sCommand = sCommand.substr(0, sCommand.find(" "));  // FIXME: might fail if the command starts with a " "
     if (sCommand == "exit") return ValidCommands::exit;
     if (sCommand == "echo") return ValidCommands::echo;
     if (sCommand == "type") return ValidCommands::type;
@@ -23,17 +23,17 @@ const ValidCommands IsValidCommand(std::string sCommand)
 std::string GetValidPath(std::string sCommand)
 {
     std::string sPathEnv = std::getenv("PATH");
+    std::stringstream ss(sPathEnv);                       // create stringstream object for the PATH env var that we can search through
+    std::string sTempPath;
 
-    size_t pos = 0;
-    std::string sTemp;
-    while ((pos = sPathEnv.find(':')) != std::string::npos) // break PATH into smaller strings at the delimiter " : "
+    while (std::getline(ss, sTempPath, ':'))
     {
-        sTemp = sPathEnv.substr(0, pos);
-        if (sTemp.find(sCommand) != std::string::npos)      // check if type command exists in PATH substrings
-            return sTemp;
-        sPathEnv.erase(0, pos + 1); // 1 because lenght of " : " is 1
-    }
+        std::filesystem::path sDir = sTempPath;          // use filesystem path to automatically take care of OS specific path separator
+        std::filesystem::path sValidPath = sDir / sCommand;   // create absoulte path to look for
 
+        if (std::filesystem::exists(sValidPath))               // check if type command exists in PATH substrings
+            return sValidPath.string();
+    }
     return scEmptyString;
 }
 
