@@ -69,7 +69,7 @@ int main()
             {
                 input.erase(0, input.find(" ") + 1); // remove "type "
 
-                if (IsValidCommand(input) != ValidCommands::invalid)
+                if (IsValidCommand(input) != ValidCommands::invalid && IsValidCommand(input) != ValidCommands::cmd)
                     std::cout << input << " is a shell builtin\n";
                 else
                 {
