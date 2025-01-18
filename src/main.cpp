@@ -73,7 +73,7 @@ int main()
                 {
                     std::string sPath = GetValidPath(input);
                     if (sPath != scEmptyString)
-                        std::cout << sPath << " is " << input << '\n';
+                        std::cout << input << " is " << sPath << '\n';
                     else
                         std::cout << input << " not found\n";
                 }
