@@ -108,10 +108,19 @@ int main()
             }
             case ValidCommands::cmd:
             case ValidCommands::pwd:
-            case ValidCommands::cd:
             {
                 system(input.c_str());
                 // call to exec function with "input" as argument
+                break;
+            }
+            case ValidCommands::cd:
+            {
+                input.erase(0, input.find(" ") + 1); // remove "cd "
+                
+                if (std::filesystem::exists(input))
+                    std::filesystem::current_path(input);
+                else
+                    std::cout << ": No such file or directory\n";
                 break;
             }
             case ValidCommands::invalid: // fall-through
