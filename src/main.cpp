@@ -116,8 +116,9 @@ int main()
             case ValidCommands::cd:
             {
                 input.erase(0, input.find(" ") + 1); // remove "cd "
-
-                if (std::filesystem::exists(input))
+                if (input[0] == '~')
+                    std::filesystem::current_path(std::getenv("USERPROFILE"));
+                else if (std::filesystem::exists(input))
                     std::filesystem::current_path(input);
                 else
                     std::cout << "cd: " << input << ": No such file or directory\n";
