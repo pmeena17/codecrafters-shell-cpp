@@ -120,7 +120,7 @@ int main()
                 if (std::filesystem::exists(input))
                     std::filesystem::current_path(input);
                 else
-                    std::cout << "cd: No such file or directory\n";
+                    std::cout << "cd: " << input << ": No such file or directory\n";
                 break;
             }
             case ValidCommands::invalid: // fall-through
