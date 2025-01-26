@@ -86,6 +86,8 @@ int main()
             case ValidCommands::echo:
             {
                 input.erase(0, input.find(" ") + 1); // remove "echo ", then print the command
+                if (input.front() == '\'' && input.back() == '\'') // if input is quoted
+                    input = input.substr(1, input.size() - 2); // remove quotes before printing
                 std::cout << input << '\n';
                 break;
             }
