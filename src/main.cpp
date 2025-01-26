@@ -76,6 +76,9 @@ int main()
         std::string input;
         std::getline(std::cin, input);
 
+        if (input == "") // skip any execution for empty command
+            continue;
+
         switch (IsValidCommand(input))
         {
             case ValidCommands::exit:
@@ -87,8 +90,21 @@ int main()
             {
                 input.erase(0, input.find(" ") + 1); // remove "echo ", then print the command
                 if (input.front() == '\'' && input.back() == '\'') // if input is quoted
-                    input = input.substr(1, input.size() - 2); // remove quotes before printing
-                std::cout << input << '\n';
+                {
+                    //input = input.substr(1, input.size() - 2); // remove quotes before printing
+                    std::cout << input.substr(1, input.size() - 2);
+                }
+                else
+                {
+                    std::string sTempArg;
+                    std::stringstream ss(input);
+                    while(std::getline(ss, sTempArg, ' '))
+                    {
+                        if (!sTempArg.empty())
+                            std::cout << sTempArg << " ";
+                    }
+                }
+                std::cout << '\n';
                 break;
             }
             case ValidCommands::type:
