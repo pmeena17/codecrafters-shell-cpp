@@ -108,6 +108,7 @@ int main()
             }
             case ValidCommands::cmd:
             case ValidCommands::pwd:
+            case ValidCommands::cd:
             {
                 system(input.c_str());
                 // call to exec function with "input" as argument
