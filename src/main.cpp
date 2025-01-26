@@ -127,7 +127,7 @@ int main()
                     input.replace(input.begin(), input.begin() + 1, sHomeDir); // if input is ~/path, keep the path by adding $HOME in front
                 
                 if (std::filesystem::exists(input))
-                    std::filesystem::current_path(input);
+                    std::filesystem::current_path(input); // check and change to path
                 else
                     std::cout << "cd: " << input << ": No such file or directory\n";
 
