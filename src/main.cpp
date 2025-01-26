@@ -5,18 +5,42 @@
 #include <filesystem>
 #include "header.h"
 
+// TODO: Refactoring
+// create a command type class with types: built-in, executable, invalid
+// call member function on command object to check for the type and
+// get valid path if it's an executable
+/*
+enum class Type { Invalid, Builtin, Executable };
+class CommandType
+{
+public:
+    CommandType(std::string in)
+    {
+        m_command = IsValidCommand(in);
+    }
+private:
+    Type m_command;
+    Type IsValidCommand(std::string in);
+    std::string GetValidPath();
+};
+*/
+
 static const std::string scEmptyString = "";
 enum class ValidCommands
 {
-    invalid, exit, echo, type, cmd
+    invalid, exit, echo, type, pwd, cd, cmd, count
 };
 
 const ValidCommands IsValidCommand(std::string sCommand)
 {
+    static_assert(ValidCommands::count == static_cast<ValidCommands>(7)); // check the code below if new valid commands are added
+
     sCommand = sCommand.substr(0, sCommand.find(" "));  // FIXME: might fail if the command starts with a " "
     if (sCommand == "exit") return ValidCommands::exit;
     if (sCommand == "echo") return ValidCommands::echo;
     if (sCommand == "type") return ValidCommands::type;
+    if (sCommand == "pwd") return ValidCommands::pwd;
+    if (sCommand == "cd") return ValidCommands::cd;
     if (GetValidPath(sCommand) != scEmptyString) return ValidCommands::cmd;
     
     return ValidCommands::invalid;
@@ -83,6 +107,7 @@ int main()
                 break;
             }
             case ValidCommands::cmd:
+            case ValidCommands::pwd:
             {
                 system(input.c_str());
                 // call to exec function with "input" as argument
