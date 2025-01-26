@@ -116,15 +116,21 @@ int main()
             case ValidCommands::cd:
             {
                 input.erase(0, input.find(" ") + 1); // remove "cd "
-                if (input[0] == '~')
-                    std::filesystem::current_path(std::getenv("USERPROFILE"));
+#ifdef _WIN32
+                std::string sHomeDir = std::getenv("USERPROFILE");
+#else
+                std::string sHomeDir = std::getenv("HOME");
+#endif
+                if (input == "~")
+                    input = sHomeDir; // if the input is just ' ~ ', replace input string with $HOME
+                else if (input[0] == '~' && input.length() > 1)
+                    input.replace(input.begin(), input.begin() + 1, sHomeDir); // if input is ~/path, keep the path by adding $HOME in front
+                
+                if (std::filesystem::exists(input))
+                    std::filesystem::current_path(input);
                 else
-                {
-                    if (std::filesystem::exists(input))
-                        std::filesystem::current_path(input);
-                    else
-                        std::cout << "cd: " << input << ": No such file or directory\n";
-                }
+                    std::cout << "cd: " << input << ": No such file or directory\n";
+
                 break;
             }
             case ValidCommands::invalid: // fall-through
